@@ -33,6 +33,21 @@ async function run() {
       res.send(cards);
     });
 
+    // post a tourist spot to the database
+    app.post("/touristSpot", async (req, res) => {
+      const database = client.db("nomad-ventures");
+      const collection = database.collection("touristSpot");
+      const result = await collection.insertOne(req.body);
+      res.send(result);
+      console.log(result);
+    });
+    app.get("/touristSpot", async (req, res) => {
+      const database = client.db("nomad-ventures");
+      const collection = database.collection("touristSpot");
+      const touristSpot = await collection.find({}).toArray();
+      res.send(touristSpot);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
