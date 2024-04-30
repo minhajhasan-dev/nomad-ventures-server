@@ -25,6 +25,14 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+    // our code will go here
+    app.get("/cards", async (req, res) => {
+      const database = client.db("nomad-ventures");
+      const collection = database.collection("cards");
+      const cards = await collection.find({}).toArray();
+      res.send(cards);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
