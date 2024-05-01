@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -41,11 +41,35 @@ async function run() {
       res.send(result);
       console.log(result);
     });
+    // get data from the database
     app.get("/touristSpot", async (req, res) => {
       const database = client.db("nomad-ventures");
       const collection = database.collection("touristSpot");
       const touristSpot = await collection.find({}).toArray();
       res.send(touristSpot);
+    });
+
+    // update information to the database
+    app.put("/touristSpot/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req.params.id) };
+      const data = {
+        $set: {
+          countryName: req.body.countryName,
+          location: req.body.location,
+          touristSpotName: req.body.touristSpotName,
+          averageCost: req.body.averageCost,
+          shortDescription: req.body.shortDescription,
+          seasonality: req.body.seasonality,
+          travelTime: req.body.travelTime,
+          totalVisitorsPerYear: req.body.totalVisitorsPerYear,
+          imageUrl: req.body.imageUrl,
+        },
+      };
+      const result = await client
+        .db("nomad-ventures")
+        .collection("touristSpot")
+        .updateOne(query, data);
+      res.send(result);
     });
 
     // Send a ping to confirm a successful connection
