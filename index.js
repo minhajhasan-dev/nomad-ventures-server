@@ -72,6 +72,16 @@ async function run() {
       res.send(result);
     });
 
+    // delete information from the database
+    app.delete("/touristSpot/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req.params.id) };
+      const result = await client
+        .db("nomad-ventures")
+        .collection("touristSpot")
+        .deleteOne(query);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
