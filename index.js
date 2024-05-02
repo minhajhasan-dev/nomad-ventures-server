@@ -82,6 +82,14 @@ async function run() {
       res.send(result);
     });
 
+    // get countries data from the database 
+    app.get("/countries", async (req, res) => {
+      const database = client.db("nomad-ventures");
+      const collection = database.collection("countries");
+      const countries = await collection.find({}).toArray();
+      res.send(countries);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
